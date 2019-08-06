@@ -1,0 +1,52 @@
+﻿@using AccessManagement.UI.DataLayer.Entities
+@model List<User>
+@{
+    Layout = null;
+    int i = 1;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+            table td {
+                padding: 8px;
+                text-align: center;
+                border: 1px solid red;
+            }
+    </style>
+</head>
+<body>
+    <p><a href="/UserManagement/Create">Create</a></p>
+    <table>
+        <tr>
+            <td>#</td>
+            <td>FullName</td>
+            <td>
+                UserName
+            </td>
+            <td>Password</td>
+            <td>Delete</td>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@(i++)</td>
+                <td>@item.FullName</td>
+                <td>
+                    @item.UserName
+                </td>
+                <td>@item.Password</td>
+                <td>Delete</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
