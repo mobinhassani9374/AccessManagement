@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using AccessManagement.Attributes;
 using AccessManagement.Models;
+using AccessManagement.UI.DataLayer.Entities;
 
 namespace AccessManagement
 {
@@ -70,6 +71,35 @@ namespace AccessManagement
                 });
 
                 modules.Add(module);
+            });
+
+            return modules;
+        }
+
+        public List<ModuleModel> GetAllWithPermision(Assembly assembly, List<UserAccess> userAccess)
+        {
+            var modules = new SubSystemService()
+               .GetAll(Assembly.GetExecutingAssembly());
+
+            userAccess.GroupBy(c => c.ControllerName).ToList().ForEach(c =>
+            {
+                var module = modules.FirstOrDefault(i => i.TitleEn == c.Key);
+
+                if (module != null)
+                {
+                    module.HasPermision = true;
+
+                    foreach (var role in c)
+                    {
+                        var ac = module.Actions.FirstOrDefault(p => p.TitleEn == role.ActionName);
+
+                        if (ac != null)
+                        {
+                            ac.HasPermision = true;
+                        }
+                    }
+                }
+
             });
 
             return modules;

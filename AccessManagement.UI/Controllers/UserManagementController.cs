@@ -63,39 +63,19 @@ namespace AccessManagement.UI.Controllers
         [HasAction(Title = "مدیریت نقش های کاربر")]
         public IActionResult Roles(int id)
         {
+            var userAccess = _context
+               .UserAccesses
+               .Where(c => c.UserId.Equals(id))
+               .ToList();
+
             var modules = new SubSystemService()
-                .GetAll(Assembly.GetExecutingAssembly());
+                .GetAllWithPermision(Assembly.GetExecutingAssembly(), userAccess);
 
             ViewBag.UserId = id;
 
-            var userAccess = _context
-                .UserAccesses
-                .Where(c => c.UserId.Equals(id))
-                .ToList();
-
-            userAccess.GroupBy(c => c.ControllerName).ToList().ForEach(c =>
-            {
-                var module = modules.FirstOrDefault(i => i.TitleEn == c.Key);
-
-                if (module != null)
-                {
-                    module.HasPermision = true;
-
-                    foreach (var role in c)
-                    {
-                        var ac = module.Actions.FirstOrDefault(p => p.TitleEn == role.ActionName);
-
-                        if (ac != null)
-                        {
-                            ac.HasPermision = true;
-                        }
-                    }
-                }
-
-            });
-
             return View(modules);
         }
+
         [HttpPost]
         public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle)
         {
