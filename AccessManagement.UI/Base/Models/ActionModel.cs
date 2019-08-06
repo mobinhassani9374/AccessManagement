@@ -12,6 +12,6 @@ namespace AccessManagement.Models
 
         public bool HasPermision { get; set; }
 
-        public string Affiliate { get; set; }
+        public string AffiliateName { get; set; }
     }
 }

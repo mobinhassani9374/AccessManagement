@@ -66,6 +66,20 @@ namespace AccessManagement
                         ac.Title = acTitle.TypedValue.Value.ToString();
                     }
 
+                    var affiliateAttribute = i.CustomAttributes.FirstOrDefault(p => p.AttributeType.Equals(typeof(HasAffiliateAttribute)));
+
+                    if (affiliateAttribute != null)
+                    {
+                        var affiliate = affiliateAttribute
+                    .NamedArguments
+                   .FirstOrDefault(p => p.MemberName == "AffiliateName");
+
+                        if (affiliate != null)
+                        {
+                            ac.AffiliateName = affiliate.TypedValue.Value?.ToString();
+                        }
+                    }
+
                     module.Actions.Add(ac);
 
                 });
