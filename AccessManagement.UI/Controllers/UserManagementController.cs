@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AccessManagement.Attributes;
 using AccessManagement.UI.DataLayer;
+using AccessManagement.UI.DataLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AccessManagement.UI.Controllers
@@ -58,9 +60,44 @@ namespace AccessManagement.UI.Controllers
             return View();
         }
 
+        [HasAction(Title = "مدیریت نقش های کاربر")]
         public IActionResult Roles(int id)
         {
-            return View();
+            var modules = new SubSystemService()
+                .GetAll(Assembly.GetExecutingAssembly());
+
+            ViewBag.UserId = id;
+
+            return View(modules);
+        }
+        [HttpPost]
+        public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle)
+        {
+            if (permision)
+            {
+                _context.UserAccesses.Add(new UserAccess
+                {
+                    ActionName = actionName,
+                    ControllerName = controllerName,
+                    UserId = userId,
+                    ActionTitle = actionTitle,
+                    ControllerTitle = controllerTitle
+                });
+            }
+            else
+            {
+                var entity = _context.UserAccesses
+                    .FirstOrDefault(c => c.UserId == userId && c.ControllerName == controllerName && c.ActionName == actionName);
+
+                if (entity != null)
+                {
+                    _context.Remove(entity);
+                }
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Roles), new { id = userId });
         }
     }
 }
