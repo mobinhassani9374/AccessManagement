@@ -68,6 +68,32 @@ namespace AccessManagement.UI.Controllers
 
             ViewBag.UserId = id;
 
+            var userAccess = _context
+                .UserAccesses
+                .Where(c => c.UserId.Equals(id))
+                .ToList();
+
+            userAccess.GroupBy(c => c.ControllerName).ToList().ForEach(c =>
+            {
+                var module = modules.FirstOrDefault(i => i.TitleEn == c.Key);
+
+                if (module != null)
+                {
+                    module.HasPermision = true;
+
+                    foreach (var role in c)
+                    {
+                        var ac = module.Actions.FirstOrDefault(p => p.TitleEn == role.ActionName);
+
+                        if (ac != null)
+                        {
+                            ac.HasPermision = true;
+                        }
+                    }
+                }
+
+            });
+
             return View(modules);
         }
         [HttpPost]
