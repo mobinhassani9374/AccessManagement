@@ -72,7 +72,7 @@ namespace AccessManagement
                     {
                         var affiliate = affiliateAttribute
                     .NamedArguments
-                   .FirstOrDefault(p => p.MemberName == "AffiliateName");
+                   .FirstOrDefault(p => p.MemberName == "ActionName");
 
                         if (affiliate != null)
                         {

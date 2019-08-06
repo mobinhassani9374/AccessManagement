@@ -78,10 +78,21 @@ namespace AccessManagement.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle)
+        public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle, string affiliatedName,string affiliatedTitle)
         {
             if (permision)
             {
+                if (!_context.UserAccesses.Any(c => c.ActionName == affiliatedName && c.ControllerName == controllerName && c.UserId == userId))
+                {
+                    _context.UserAccesses.Add(new UserAccess
+                    {
+                        ActionName = affiliatedName,
+                        ControllerName = controllerName,
+                        UserId = userId,
+                        ActionTitle = affiliatedTitle,
+                        ControllerTitle = controllerTitle
+                    });
+                }
                 _context.UserAccesses.Add(new UserAccess
                 {
                     ActionName = actionName,

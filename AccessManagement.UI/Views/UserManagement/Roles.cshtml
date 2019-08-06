@@ -32,6 +32,8 @@
                     <input type="hidden" name="controllerName" value="@item.TitleEn" />
                     <input type="hidden" name="actionTitle" value="@(ac.Title)" />
                     <input type="hidden" name="controllerTitle" value="@item.Title" />
+                    <input type="hidden" name="affiliatedName" value="@ac.AffiliateName" />
+                    <input type="hidden" name="affiliatedTitle" value="@ac.AffiliateTitle" />
                     @if (ac.HasPermision)
                     {
                         <input type="hidden" name="permision" value="false" />
