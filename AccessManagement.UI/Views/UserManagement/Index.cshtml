@@ -34,6 +34,7 @@
             </td>
             <td>Password</td>
             <td>Delete</td>
+            <td>Roles</td>
         </tr>
         @foreach (var item in Model)
         {
@@ -45,6 +46,9 @@
                 </td>
                 <td>@item.Password</td>
                 <td>Delete</td>
+                <td>
+                    <a href="/UserManagement/Roles/@(item.Id)"></a>
+                </td>
             </tr>
         }
     </table>

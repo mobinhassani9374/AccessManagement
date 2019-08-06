@@ -57,5 +57,10 @@ namespace AccessManagement.UI.Controllers
         {
             return View();
         }
+
+        public IActionResult Roles(int id)
+        {
+            return View();
+        }
     }
 }
