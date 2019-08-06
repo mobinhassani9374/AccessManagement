@@ -61,6 +61,7 @@ namespace AccessManagement.UI.Controllers
         }
 
         [HasAction(Title = "مدیریت نقش های کاربر")]
+        [HasAffiliate(ActionName = nameof(Index))]
         public IActionResult Roles(int id)
         {
             var userAccess = _context
