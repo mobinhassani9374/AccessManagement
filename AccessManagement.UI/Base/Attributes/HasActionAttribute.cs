@@ -13,15 +13,6 @@ namespace AccessManagement.Attributes
     {
         public string Title { get; set; }
 
-        //public override void OnActionExecuted(ActionExecutedContext context)
-        //{
-        //    ////var strUserId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-        //    ////var userId = Convert.ToInt32(strUserId);
-
-        //    //context.Result = new Microsoft.AspNetCore.Mvc.ForbidResult();
-
-        //    base.OnActionExecuted(context);
-        //}
+        public string DependTo { get; set; }
     }
 }

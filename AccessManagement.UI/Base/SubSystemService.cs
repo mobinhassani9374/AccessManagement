@@ -66,17 +66,33 @@ namespace AccessManagement
                         ac.Title = acTitle.TypedValue.Value.ToString();
                     }
 
-                    var affiliateAttribute = i.CustomAttributes.FirstOrDefault(p => p.AttributeType.Equals(typeof(HasAffiliateAttribute)));
+                    var acDependTo = acAttribute
+                     .NamedArguments
+                    .FirstOrDefault(p => p.MemberName == "DependTo");
 
-                    if (affiliateAttribute != null)
+                    if (acDependTo != null)
                     {
-                        var affiliate = affiliateAttribute
-                    .NamedArguments
-                   .FirstOrDefault(p => p.MemberName == "ActionName");
+                        ac.DependTo = acDependTo.TypedValue.Value?.ToString();
 
-                        if (affiliate != null)
+                        if (!string.IsNullOrEmpty(ac.DependTo))
                         {
-                            ac.AffiliateName = affiliate.TypedValue.Value?.ToString();
+                            var dependToAc = actions
+                            .FirstOrDefault(p => p.Name == ac.DependTo);
+
+                            var dependToAttr = dependToAc
+                            .CustomAttributes
+                            .FirstOrDefault(p => p
+                            .AttributeType
+                            .Equals(typeof(HasActionAttribute)));
+
+                            var depenToTitle= dependToAttr
+                             .NamedArguments
+                             .FirstOrDefault(p => p.MemberName == "Title");
+
+                            if(depenToTitle!=null)
+                            {
+                                ac.DependToTitle= depenToTitle.TypedValue.Value?.ToString();
+                            }
                         }
                     }
 

@@ -48,20 +48,19 @@ namespace AccessManagement.UI.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HasAction(Title = "حذف کاربر در سامانه")]
+        [HasAction(Title = "حذف کاربر در سامانه", DependTo = nameof(Index))]
         public IActionResult Delete()
         {
             return View();
         }
 
-        [HasAction(Title = "ویرایش کاربر در سامانه")]
+        [HasAction(Title = "ویرایش کاربر در سامانه", DependTo = nameof(Index))]
         public IActionResult Edit()
         {
             return View();
         }
 
-        [HasAction(Title = "مدیریت نقش های کاربر")]
-        [HasAffiliate(ActionName = nameof(Index))]
+        [HasAction(Title = "مدیریت نقش های کاربر", DependTo = nameof(Index))]
         public IActionResult Roles(int id)
         {
             var userAccess = _context
@@ -78,21 +77,27 @@ namespace AccessManagement.UI.Controllers
         }
 
         [HttpPost]
-        public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle, string affiliatedName,string affiliatedTitle)
+        public IActionResult SetRole(int userId, string actionName, string controllerName, bool permision, string controllerTitle, string actionTitle, string dependTo, string dependToTitle)
         {
             if (permision)
             {
-                if (!_context.UserAccesses.Any(c => c.ActionName == affiliatedName && c.ControllerName == controllerName && c.UserId == userId))
+                if (!string.IsNullOrEmpty(dependTo))
                 {
-                    _context.UserAccesses.Add(new UserAccess
+                    if (!_context.UserAccesses.Any(c => c.UserId.Equals(userId) &&
+                     c.ControllerName.Equals(controllerName) &&
+                     c.ActionName.Equals(actionName)))
                     {
-                        ActionName = affiliatedName,
-                        ControllerName = controllerName,
-                        UserId = userId,
-                        ActionTitle = affiliatedTitle,
-                        ControllerTitle = controllerTitle
-                    });
+                        _context.UserAccesses.Add(new UserAccess
+                        {
+                            ActionName = dependTo,
+                            ActionTitle = dependToTitle,
+                            ControllerName = controllerName,
+                            ControllerTitle = controllerTitle,
+                            UserId = userId
+                        });
+                    }
                 }
+
                 _context.UserAccesses.Add(new UserAccess
                 {
                     ActionName = actionName,

@@ -32,17 +32,34 @@
                     <input type="hidden" name="controllerName" value="@item.TitleEn" />
                     <input type="hidden" name="actionTitle" value="@(ac.Title)" />
                     <input type="hidden" name="controllerTitle" value="@item.Title" />
-                    <input type="hidden" name="affiliatedName" value="@ac.AffiliateName" />
-                    <input type="hidden" name="affiliatedTitle" value="@ac.AffiliateTitle" />
+                    <input type="hidden" name="dependTo" value="@ac.DependTo" />
+                    <input type="hidden" name="dependToTitle" value="@ac.DependToTitle" />
                     @if (ac.HasPermision)
                     {
-                        <input type="hidden" name="permision" value="false" />
-                        <input type="submit" value="@ac.Title" style="color:white;background-color:green;" />
+                        @if (string.IsNullOrEmpty(ac.DependTo))
+                        {
+                            <input type="hidden" name="permision" value="false" />
+                            <input type="submit" value="@ac.Title" style="color:white;background-color:green;" />
+                        }
+                        else
+                        {
+                            <input type="hidden" name="permision" value="false" />
+                            <input type="submit" value="@($"{ac.Title} - وابسته به {ac.DependToTitle}")" style="color:white;background-color:green;" />
+                        }
                     }
                     else
                     {
-                        <input type="hidden" name="permision" value="true" />
-                        <input type="submit" value="@ac.Title" style="color:white;background-color:red;" />
+                        @if (string.IsNullOrEmpty(ac.DependTo))
+                        {
+                            <input type="hidden" name="permision" value="true" />
+                            <input type="submit" value="@ac.Title" style="color:white;background-color:red;" />
+                        }
+                        else
+                        {
+                            <input type="hidden" name="permision" value="true" />
+                            <input type="submit" value="@($"{ac.Title} - وابسته به {ac.DependToTitle}")" style="color:white;background-color:red;" />
+                        }
+
                     }
 
                 </form>
