@@ -109,6 +109,8 @@ namespace AccessManagement.UI.Controllers
             }
             else
             {
+                new SubSystemService().GetAllActions_DependToAction(Assembly.GetExecutingAssembly(), controllerName, actionName); ;
+
                 var entity = _context.UserAccesses
                     .FirstOrDefault(c => c.UserId == userId && c.ControllerName == controllerName && c.ActionName == actionName);
 

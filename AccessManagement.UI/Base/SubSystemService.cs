@@ -85,13 +85,13 @@ namespace AccessManagement
                             .AttributeType
                             .Equals(typeof(HasActionAttribute)));
 
-                            var depenToTitle= dependToAttr
+                            var depenToTitle = dependToAttr
                              .NamedArguments
                              .FirstOrDefault(p => p.MemberName == "Title");
 
-                            if(depenToTitle!=null)
+                            if (depenToTitle != null)
                             {
-                                ac.DependToTitle= depenToTitle.TypedValue.Value?.ToString();
+                                ac.DependToTitle = depenToTitle.TypedValue.Value?.ToString();
                             }
                         }
                     }
@@ -133,6 +133,27 @@ namespace AccessManagement
             });
 
             return modules;
+        }
+
+        public List<string> GetAllActions_DependToAction(Assembly assembly, string controllerName, string actionName)
+        {
+            var result = new List<string>();
+
+            var controller = new SubSystemService()
+              .GetAll(Assembly.GetExecutingAssembly())
+              .FirstOrDefault(c => c.TitleEn.Equals(controllerName));
+
+            if (controller != null)
+            {
+                result = controller
+                     .Actions
+                     .Where(c => !string.IsNullOrEmpty(c.DependTo) 
+                     && c.DependTo.Equals(actionName))
+                     .Select(c => c.TitleEn)
+                     .ToList();
+            }
+
+            return result;
         }
     }
 }
