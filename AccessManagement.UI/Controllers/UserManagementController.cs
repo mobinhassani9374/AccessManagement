@@ -23,6 +23,7 @@ namespace AccessManagement.UI.Controllers
         [HasAction(Title = "مشاهده کاربران")]
         public IActionResult Index()
         {
+          
             var model = _context.Users.ToList();
             return View(model);
         }
