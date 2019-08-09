@@ -85,7 +85,7 @@ namespace AccessManagement.UI.Controllers
                 {
                     if (!_context.UserAccesses.Any(c => c.UserId.Equals(userId) &&
                      c.ControllerName.Equals(controllerName) &&
-                     c.ActionName.Equals(actionName)))
+                     c.ActionName.Equals(dependTo)))
                     {
                         _context.UserAccesses.Add(new UserAccess
                         {
@@ -109,7 +109,20 @@ namespace AccessManagement.UI.Controllers
             }
             else
             {
-                new SubSystemService().GetAllActions_DependToAction(Assembly.GetExecutingAssembly(), controllerName, actionName); ;
+                var actions = new SubSystemService()
+                    .GetAllActions_DependToAction(Assembly.GetExecutingAssembly(),
+                    controllerName,
+                    actionName);
+
+                var userAccess = _context.UserAccesses.Where(c => c.UserId.Equals(userId)
+                  && c.ControllerName.Equals(controllerName)
+                  && actions.Contains(c.ActionName))
+                  .ToList();
+
+                userAccess.ForEach(c=> 
+                {
+                    _context.Remove(c);
+                });
 
                 var entity = _context.UserAccesses
                     .FirstOrDefault(c => c.UserId == userId && c.ControllerName == controllerName && c.ActionName == actionName);
