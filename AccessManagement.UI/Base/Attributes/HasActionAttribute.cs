@@ -1,5 +1,6 @@
 ﻿using AccessManagement.UI.DataLayer;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -37,7 +38,24 @@ namespace AccessManagement.Attributes
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            base.OnActionExecuting(context);
+            var controller = context.RouteData.Values["controller"];
+            var action = context.RouteData.Values["action"];
+
+            var strUserId = context.HttpContext.User.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            var userId = Convert.ToInt32(strUserId);
+
+            if (_context.UserAccesses.Any(c => c.UserId == userId && c.ControllerName.Equals(controller) && c.ActionName.Equals(action)))
+            {
+                base.OnActionExecuting(context);
+            }
+            else
+            {
+                context.Result = new ForbidResult();
+            }
+            
         }
     }
 }
