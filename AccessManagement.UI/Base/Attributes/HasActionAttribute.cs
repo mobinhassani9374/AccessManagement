@@ -21,7 +21,23 @@ namespace AccessManagement.Attributes
 
         public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
         {
-            serviceProvider.GetService(typeof(AppDbContext));
+            return new HasActionInternal(serviceProvider.GetService(typeof(AppDbContext)) as AppDbContext);
+        }
+    }
+
+
+    internal class HasActionInternal : ActionFilterAttribute
+    {
+        private readonly AppDbContext _context;
+
+        public HasActionInternal(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
         }
     }
 }

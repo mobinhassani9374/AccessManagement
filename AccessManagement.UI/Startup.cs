@@ -24,7 +24,9 @@ namespace AccessManagement.UI
         {
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer("Data Source=.;Initial Catalog=AccesssManagement;Integrated Security=True");
+                //options.UseSqlServer("Data Source=.;Initial Catalog=AccesssManagement;Integrated Security=True");
+
+                options.UseSqlServer("Data Source=WIN-SQL\\MSSQLSERVER2016;Initial Catalog=AccessMAnagement;Persist Security Info=True;User ID=sa; Password=exir@123; MultipleActiveResultSets=True");
             });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
